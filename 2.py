@@ -1,4 +1,4 @@
-from docx import Document
+from docx import Document, styles
 
 
 def merge_cells_by_column(table, column_index):
@@ -14,6 +14,8 @@ doc = Document()
 
 # 添加一个具有4列和4行的表格
 table = doc.add_table(rows=5, cols=4)
+table.style = 'Colorful Shading Accent 3'
+# table.style = 'LightShading-Accent1'
 
 # 填入数据
 data = [
