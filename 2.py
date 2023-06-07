@@ -31,7 +31,8 @@ for i, row in enumerate(table.rows):
 # 按列合并单元格
 merge_cells_by_column(table, 1)  # 合并第二列
 
-
+p1 = doc.add_paragraph('Hello, World!')
+prior_paragraph = p1.insert_paragraph_before('Lorem ipsum')
 
 # 保存Word文档
 doc.save('output.docx')
