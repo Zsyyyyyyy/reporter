@@ -41,8 +41,8 @@ def merge_cells_by_column_test(table, column):
 
 def generate_table(file_name, doc):
     df = pd.read_csv('data/{}.csv'.format(file_name))
-    print('行数' + str(len(df)))
-    print('列数' + str(len(df.columns)))
+    # print('行数' + str(len(df)))
+    # print('列数' + str(len(df.columns)))
     # doc = Document(doc)
     table = doc.add_table(1, cols=len(df.columns), style='Table Grid')
     header_cells = table.rows[0].cells
