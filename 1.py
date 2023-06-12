@@ -90,7 +90,10 @@ if __name__ == '__main__':
 
     document.add_heading('1. 企业基本信息', level=1)
     document.add_heading('2. 发票分析', level=1)
-    document.add_heading('3. 财务涉税风险分析', level=1)
+    document.add_heading('3. 财务涉税风险评估', level=1)
+    document.add_heading('4. 税务风险评估', level=1)
+    document.add_heading('5. 财税票综合风险评估', level=1)
+    document.add_heading('6. 当前欠税信息', level=1)
 
 
 
