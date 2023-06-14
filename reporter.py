@@ -1,39 +1,22 @@
 from docx import Document
-from docx.shared import Inches, Pt, RGBColor
+from docx.shared import Inches, Pt, RGBColor, Cm
 import pandas as pd
 from docx.enum.table import WD_TABLE_ALIGNMENT
 import numpy as np
 from docx.oxml.shared import qn
 from docx.oxml.xmlchemy import OxmlElement
 import matplotlib.pyplot as plt
+from draw import draw
+
+
+
+
 
 
 # from matplotlib.font_manager import FontManager
 # import subprocess
 
 
-
-
-def draw():
-    plt.rcParams["font.family"] = ["sans-serif"]
-    plt.rcParams["font.sans-serif"] = ["Kaitt" ,"Helvetica"]
-    plt.rcParams["axes.unicode_minus"] = False
-        # plt.rc("font",family='Helvetica')
-    plt.rcdefaults()
-    fig, ax = plt.subplots()
-    y = ('高风险', '中风险', '低风险')
-    y_pos = np.arange(3)
-    bar_color = ['tab:red', 'tab:orange', 'tab:blue']
-    performance =  3 + 10 * np.random.rand(3)
-    error = np.random.rand(3)
-    ax.set_yticks(y_pos, labels=y)
-    ax.invert_yaxis()  # labels read top-to-bottom
-    ax.barh(y_pos, performance, xerr=error, align='center', color=bar_color)
-
-    ax.set_xlabel('Performance')
-    ax.set_title('横坐标')
-
-    plt.show()
 
 def set_table_header_bg_color(tc):
     """
@@ -90,25 +73,31 @@ def generate_table(file_name, doc):
     table.style.paragraph_format.alignment = WD_TABLE_ALIGNMENT.CENTER
     # table.style.font.size = Pt(8)
 
-
 if __name__ == '__main__':
-    # mpl_fonts = set(f.name for f in FontManager().ttflist)
-
-    # print('all font list get from matplotlib.font_manager:')
-    # for f in sorted(mpl_fonts):
-    #     print('\t' + f)
     document = Document()
     document.styles['Normal'].font.name = u'宋体'
-    document.styles['Normal'].font.size = Pt(8)
+    document.styles['Normal'].font.size = Pt(10)
     document.styles['Normal'].font.color.rgb = RGBColor(0, 0, 0)
     document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
+
+    document.sections[0].top_margin = Cm(1.27)
+    document.sections[0].bottom_margin = Cm(1.27)
+    document.sections[0].left_margin = Cm(1.27)
+    document.sections[0].right_margin = Cm(1.27)
+
+
+
+
+
     document.add_heading('总结概述', level=1)
     # document.add_heading('1. 整体风险', level=4)
     p1 = document.add_paragraph()
     p1.add_run('1. 整体风险').bold = True
-    draw()
+    draw.draw('1')
+
     p2 = document.add_paragraph()
     p2.add_run('本次报告分析周期为：（2020年01月01日到2023年02月28日），通过发票、财务报表、纳税申报表的综合分析，共检测出风险点14项，其中高风险3项，中风险6项，低风险5项')
+    document.add_picture('fig/1.png')
     # p2 = document.add_paragraph('本次报告分析周期为：（2020年01月01日到2023年02月28日），通过发票、财务报表、纳税申报表的综合分析，共检测出风险点14项，其中高风险3项，中风险6项，低风险5项')
     # p1.paragraph_format.line_spacing = Pt(15)
     # p1.style.font.size = Pt(8)
@@ -224,3 +213,6 @@ if __name__ == '__main__':
     document.save('new.docx')
 
 
+    for paragraph in document.paragraphs:
+        if 'Heading' in paragraph.style.name:
+            print(paragraph.text)
