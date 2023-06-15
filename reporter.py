@@ -1,7 +1,8 @@
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor, Cm
 import pandas as pd
-from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.table import WD_TABLE_ALIGNMENT,WD_ALIGN_VERTICAL
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 import numpy as np
 from docx.oxml.shared import qn
 from docx.oxml.xmlchemy import OxmlElement
@@ -12,9 +13,6 @@ from draw import draw
 
 
 
-
-# from matplotlib.font_manager import FontManager
-# import subprocess
 
 
 
@@ -44,41 +42,90 @@ def merge_cells_by_column_test(table, column):
     for i in range(1, len(table.rows)):
         if(head_cell.text == table.cell(i, column).text):
             head_cell.merge(table.cell(i, column))
+            head_cell.paragraphs[0].runs[0].font.size = Pt(9)
+            head_cell.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            head_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+            head_cell.paragraphs[0].runs[0].font.color.rgb = RGBColor(69, 69, 69)
             head_cell.text = head_cell_text
         else:
             head_cell = table.cell(i, column)
+            head_cell.paragraphs[0].runs[0].font.size = Pt(9)
+            head_cell.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            head_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+            head_cell.paragraphs[0].runs[0].font.color.rgb = RGBColor(69, 69, 69)
             head_cell_text = head_cell.text
 
 
 def generate_table(file_name, doc):
     df = pd.read_csv('data/{}.csv'.format(file_name))
     table = doc.add_table(1, cols=len(df.columns), style='Table Grid')
+    table.autofit = True
+    table.columns[0].width = Inches(1)
+    table.columns[1].width = Inches(2)
+    table.columns[2].width = Inches(1)
+
+
+
+
     header_cells = table.rows[0].cells
     for i, col in enumerate(df.columns):
-        header_cells[i].text = col
+        cell = header_cells[i]
+        cell.text = col
+        # cell.paragraphs[0].runs[0].font.bold = True
+        cell.paragraphs[0].runs[0].font.size = Pt(9)
+        cell.paragraphs[0].runs[0].font.color.rgb = RGBColor(69, 69, 69)
+        cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
+    table.rows[0].height = Pt(24)
     # 填入数据
     for i, row in enumerate(df.itertuples(), start=1):
         cells = table.add_row().cells
+        table.rows[i].height = Pt(24)
         for j, value in enumerate(row[1:], start=0):
-            cells[j].text = str(value)
+            cell = cells[j]
+            cell.text = str(value)
+            cell.paragraphs[0].runs[0].font.size = Pt(9)
+            cell.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+            cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+            cell.paragraphs[0].runs[0].font.color.rgb = RGBColor(69, 69, 69)
+
+
+            # cells[j].font.size = Pt(1)
 
     merge_cells_by_column_test(table, 0)
     merge_cells_by_column_test(table, 1)
 
+
     for i in range(len(table.columns)):
         set_table_header_bg_color(table.rows[0].cells[i])
-        table.rows[0].cells[i].width = Inches(1000)
     # table.style = 'Light Grid'
     table.style.paragraph_format.alignment = WD_TABLE_ALIGNMENT.CENTER
     # table.style.font.size = Pt(8)
 
 if __name__ == '__main__':
     document = Document()
-    document.styles['Normal'].font.name = u'宋体'
-    document.styles['Normal'].font.size = Pt(10)
-    document.styles['Normal'].font.color.rgb = RGBColor(0, 0, 0)
-    document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
+    text_style = document.styles['Normal']
+    
+    text_style.font.name = u'黑体'
+    text_style.font.size = Pt(9.5)
+    text_style.font.color.rgb = RGBColor(69, 69, 69)
+    text_style._element.rPr.rFonts.set(qn('w:eastAsia'), u'黑体')
+
+    head_1_style = document.styles['Heading 1']
+
+    head_1_style.font.name = u'黑体'
+    head_1_style.font.size = Pt(15)
+    # head_1_style.font.color.rgb = RGBColor(0, 0, 0)
+    head_1_style._element.rPr.rFonts.set(qn('w:eastAsia'), u'黑体')
+
+
+    head_2_style = document.styles['Heading 2']
+
+    head_2_style.font.name = u'黑体'
+    head_2_style.font.size = Pt(13)
+    head_2_style.font.color.rgb = RGBColor(69, 69, 69)
+    head_2_style._element.rPr.rFonts.set(qn('w:eastAsia'), u'黑体')
+
 
     document.sections[0].top_margin = Cm(1.27)
     document.sections[0].bottom_margin = Cm(1.27)
@@ -90,19 +137,14 @@ if __name__ == '__main__':
 
 
     document.add_heading('总结概述', level=1)
-    # document.add_heading('1. 整体风险', level=4)
     p1 = document.add_paragraph()
-    p1.add_run('1. 整体风险').bold = True
+    p1.add_run('1. 整体风险').font.size=Pt(10.5)
     draw.draw('1')
 
     p2 = document.add_paragraph()
-    p2.add_run('本次报告分析周期为：（2020年01月01日到2023年02月28日），通过发票、财务报表、纳税申报表的综合分析，共检测出风险点14项，其中高风险3项，中风险6项，低风险5项')
+    p2.add_run('本次报告分析周期为：(2020年01月01日到2023年02月28日)，通过发票、财务报表、纳税申报表的综合分析，共检测出风险点14项，其中高风险3项，中风险6项，低风险5项')
     document.add_picture('fig/1.png')
-    # p2 = document.add_paragraph('本次报告分析周期为：（2020年01月01日到2023年02月28日），通过发票、财务报表、纳税申报表的综合分析，共检测出风险点14项，其中高风险3项，中风险6项，低风险5项')
     # p1.paragraph_format.line_spacing = Pt(15)
-    # p1.style.font.size = Pt(8)
-    # document.add_heading('2. 具体风险如下', level=4)
-    # p3 = document.add_paragraph('2. 具体风险如下').bold = True
     p3 = document.add_paragraph()
     p3.add_run('2. 具体风险如下').bold = True
     generate_table('1', document)

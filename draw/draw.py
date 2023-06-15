@@ -13,7 +13,7 @@ def draw(file_name):
 
     font = {
     'family': 'SimHei',
-    'weight': 'light',
+    'weight': 'light'
     }
     df = pd.read_csv('data/{}.csv'.format(file_name), header=0)
     data = df['风险等级'].value_counts()
@@ -26,26 +26,38 @@ def draw(file_name):
 
     fig = plt.figure(figsize=(8,2), dpi=150)
     ax = fig.add_subplot()
+    # plt.text(3,15,'SimHei',color='red')
+    # plt.tick_params(axis='y', color='red')
+
     ax.grid(True, linestyle='--', zorder=0)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
-    # ax = fig.add_subplots(221)
-    y_pos = np.arange(3)
+    ax.spines['bottom'].set_color('dimgrey')
+    ax.spines['left'].set_color('dimgrey')
     bar_color = ['orangered', 'darkorange', 'gold']
+    y_pos = np.arange(3)
+
     # x轴
-    plt.xlim(0,32)
+    plt.xlim(0,35)
     # x轴刻度
-    plt.xticks(np.arange(0,32,2))
+    plt.xticks(np.arange(0,35,2),color='dimgrey')
+    plt.yticks(y_pos,y,color='dimgrey',fontproperties=font)
+    plt.tick_params(axis='x', color='dimgrey')
+    plt.tick_params(axis='y', color='dimgrey')
+    # ax.set_ylim(auto=False)
+
     # y轴
-    ax.set_yticks(y_pos, labels=y, font=font)
+    # ax.set_yticks(y_pos, labels=y)
+    # ax.set_yticks(y_pos, labels=y)
 
     ax.invert_yaxis()  # labels read top-to-bottom
     # x_label = [str(x[0])+'项', str(x[1])+'项', str(x[2])+'项']
-    ax.barh(y_pos, x, align='center', color=bar_color, height=0.5, zorder=10)
+    ax.barh(y_pos, x, align='center', color=bar_color, height=0.5, zorder=5)
+    # ax.barh(y_pos, x, align='center', color=bar_color, zorder=10)
 
-    # ax.bar_label(p1, label_type='edge')
+    # 添加字
     for a,b in enumerate(x):
-        ax.text(b+0.2,a,str(b)+'项',va='center',fontsize=10, fontdict=font)
+        ax.text(b-1.5,a,str(b)+'项',va='center',fontsize=10, fontdict=font, color='white',zorder=10)
 
 
     # ax.set_xlabel('Performance')
