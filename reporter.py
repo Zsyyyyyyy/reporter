@@ -8,7 +8,7 @@ from docx.oxml.shared import qn
 from docx.oxml.xmlchemy import OxmlElement
 import matplotlib.pyplot as plt
 from draw import draw
-
+import docx2pdf
 
 
 
@@ -98,6 +98,9 @@ def generate_table(file_name, doc):
 
     for i in range(len(table.columns)):
         set_table_header_bg_color(table.rows[0].cells[i])
+        # table.rows[0].cells[i].border.top.color.rgb = (0,0,0)
+
+        
     # table.style = 'Light Grid'
     table.style.paragraph_format.alignment = WD_TABLE_ALIGNMENT.CENTER
     # table.style.font.size = Pt(8)
@@ -251,8 +254,13 @@ if __name__ == '__main__':
 
 
     # document.add_page_break()
-
-    document.save('new.docx')
+    docx_file = 'new.docx'
+    # html_file = 'new.html'
+    document.save(docx_file)
+    # d1 = Document(docx=docx_file)
+    pdf_file = 'new.pdf'
+    docx2pdf.convert(docx_file,pdf_file)
+    # pdfkit.from_file(docx_file, pdf_file)
 
 
     for paragraph in document.paragraphs:
