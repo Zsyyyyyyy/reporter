@@ -257,10 +257,10 @@ if __name__ == '__main__':
     docx_file = 'new.docx'
     # html_file = 'new.html'
     document.save(docx_file)
+    # document.save(html_file)
     # d1 = Document(docx=docx_file)
     pdf_file = 'new.pdf'
     docx2pdf.convert(docx_file,pdf_file)
-    # pdfkit.from_file(docx_file, pdf_file)
 
 
     for paragraph in document.paragraphs:
