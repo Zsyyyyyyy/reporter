@@ -1,3 +1,4 @@
 *.docx
 .idea
 .png
+__pycache__/
