@@ -260,9 +260,9 @@ if __name__ == '__main__':
     # document.save(html_file)
     # d1 = Document(docx=docx_file)
     pdf_file = 'new.pdf'
-    docx2pdf.convert(docx_file,pdf_file)
+    # docx2pdf.convert(docx_file,pdf_file)
 
 
     for paragraph in document.paragraphs:
-        if 'Heading' in paragraph.style.name:
+        if 'Heading 1' in paragraph.style.name:
             print(paragraph.text)
