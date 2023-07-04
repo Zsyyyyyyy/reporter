@@ -1,5 +1,5 @@
 *.docx
 .idea
-.png
+*.png
 __pycache__/
 *.pdf
